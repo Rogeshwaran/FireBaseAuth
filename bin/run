@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+const db = require('../utils/sequelize');
+require('dotenv').config();
+
+var app = require('../app');
+var http = require('http');
+
+app.set('port', parseInt(process.env.PORT, 10));
+
+var server = http.createServer(app);
+server.listen(process.env.PORT);
+server.on('listening', onListening)
+
+function onListening() {
+	var addr = server.address();
+	var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+	console.log('Listening on ' + bind);
+}
+
+// try {
+//     server.listen(port);
+//     db.end((err) => {
+//         console.log('error terminating db conn:\n', err);
+//     });
+// } catch(err) {
+//     db.end((err) => {
+//         console.log('error terminating db conn:\n', err);
+//     });
+// }

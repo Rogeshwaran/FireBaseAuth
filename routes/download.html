@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download</title>
+</head>
+<body>
+    <form action = "/download/verify" method="post">
+    <label>Download shared files</label>
+    <br><br>
+    <label for="senderInput">senderID: </label>
+    <input id = "senderInput" type="text" name = "owner">
+    <br><br>
+    <label for="receiverInput">yourID: </label>
+    <input id = "receiverInput" type="text" name = "user">
+    <br><br>
+    <label for="pinInput">pin: </label>
+    <input id = "pinInput" type="number" name = "pin">
+    <br><br>
+    <button type = "submit">download</button>
+    </form>
+</body>
+</html>
