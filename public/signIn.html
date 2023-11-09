@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SignIn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  </head>
+  <body>
+    <form id = "mainForm" class="w-25 m-4">
+      <h2>User SignIn</h2>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="emailInput" placeholder="name@example.com">
+        <label for="floatingInput">Email address</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="passwordInput" placeholder="Password">
+        <label for="floatingPassword">Password</label>
+      </div>
+
+      <button type="submit" class="btn-primary" style="float: right;"> SignIn </button>
+      <a href="Register"> <button type="button" class="btn-primary" style="float: right;"> SignUp </button></a>
+    </form>  
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+      import { getDatabase, get, ref, child } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js";
+      import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyD6AkNEdVIH35h6intRygcHC7EtVqKxiRU",
+        authDomain: "dbms-authentication.firebaseapp.com",
+        projectId: "dbms-authentication",
+        storageBucket: "dbms-authentication.appspot.com",
+        messagingSenderId: "587572477278",
+        appId: "1:587572477278:web:1fe9f21c3c3a2c9384e3cf"
+      };
+    
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase();
+      const auth = getAuth(app);
+      const dbref = ref(db);
+
+      let emailInput = document.getElementById('emailInput');
+      let passwordInput = document.getElementById('passwordInput');
+      let mainForm = document.getElementById('mainForm');
+
+      let SignInUser = evt => {
+        evt.preventDefault();
+
+        signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+  .then((credentials) => {
+    alert("Signed In");
+    console.log("Credentials:", credentials);
+    
+    const userRef = child(dbref, 'UserAuthList/' + credentials.user.uid);
+    
+    get(userRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const user = snapshot.val();
+        console.log("User data:", user);
+        
+        localStorage.setItem("user-info", JSON.stringify({
+          firstname: user.firstname,
+          lastname: user.lastname
+        }));
+        
+        localStorage.setItem("user-creds", JSON.stringify(credentials.user));
+        
+        window.location.href = "/";
+      } else {
+        console.log("Data does not exist at the specified path.");
+      }
+    }).catch((error) => {
+      alert(error.message);
+      console.log(error.code);
+      console.log(error.message);
+    });
+  })
+  .catch((error) => {
+    alert(error.message);
+    console.log(error.code);
+    console.log(error.message);
+  });
+
+      }
+      
+      mainForm.addEventListener('submit', SignInUser);
+    </script>
+  </body>
+</html>

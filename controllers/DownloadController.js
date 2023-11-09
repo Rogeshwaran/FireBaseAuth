@@ -1,8 +1,7 @@
 const request = require('superagent')
-const { db, files, permissions } = require('../utils/sequelize');
-const fetchData = require('../utils/helper');
+const { files, permissions } = require('../utils/sequelize');
 
-exports.verifyAndFetchFile = async (req, res, next) => {
+async function verifyAndFetchFile(req, res, next) {
     try {
         console.log(req.body);
         const permitted = await permissions.findOne({
@@ -35,5 +34,26 @@ exports.verifyAndFetchFile = async (req, res, next) => {
 
     } catch (err) {
         console.log(err);
+        return res.status(500).json({message: 'something went wrong'});
     }
 }
+
+async function addFileRecord(req, res, next) {
+    try {
+        const newFile = {
+            owner: req.body.owner,
+            link: req.body.link,
+            pin: req.body.pin
+        };
+        await files.create(newFile);
+
+        return res.status(200).json({message: "file recorded"});
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+module.exports = {
+    verifyAndFetchFile,
+    addFileRecord
+};

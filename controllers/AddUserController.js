@@ -1,5 +1,4 @@
-const { db, files, permissions } = require('../utils/sequelize');
-const fetchData = require('../utils/helper');
+const { permissions } = require('../utils/sequelize');
 
 exports.verifyAndFetchFile = async (req, res, next) => {
     try {
@@ -19,11 +18,9 @@ exports.verifyAndFetchFile = async (req, res, next) => {
             owner: req.body.owner,
             user: req.body.user
         }
-
         await permissions.create(newPerm);
 
         return res.status(200).json({message: "added"});
-
     } catch (err) {
         console.log(err);
     }

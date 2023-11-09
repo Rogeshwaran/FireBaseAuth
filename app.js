@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const createError = require('http-errors');
 
-// const initRouter = require('./routes/Init')
 const downloadRouter = require('./routes/Download');
 const adduserRouter = require('./routes/Adduser');
 
@@ -11,7 +10,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + "/public/index.html");
+    res.sendFile(__dirname + "/public/home.html");
+})
+app.get('/signin', function (req, res) {
+	res.sendFile(__dirname + "/public/signIn.html");
+})
+app.get('/register', function (req, res) {
+	res.sendFile(__dirname + "/public/Register.html");
 })
 app.use('/download', downloadRouter);
 app.use('/adduser', adduserRouter);
